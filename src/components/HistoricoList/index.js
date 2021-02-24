@@ -22,7 +22,7 @@ export default function HistoricoList({data}) {
                 </IconView>
             </Tipo>
             <ValorText>
-                R$ {data.valor.toFixed(2)}
+                R$ {parseFloat(data.valor).toFixed(2)}
             </ValorText>
         </Container>
     );

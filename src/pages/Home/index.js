@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { View, Text, Button } from 'react-native';
 import { AuthContext } from '../../contexts/auth';
 import Header from '../../components/Header';
@@ -11,24 +11,52 @@ import {
   List
 } from '../Home/styles';
 import HistoricoList from '../../components/HistoricoList';
+import firebase from '../../Services/FirebaseConnection';
+import { format } from 'date-fns';
 
 export default function Home() {
 
-  const { user, signOut } = useContext(AuthContext);
-  const [historico,setHistorico] = useState([
-    {key:'1',tipo:'receita',valor:1200},
-    {key:'2',tipo:'despesa',valor:200},
-    {key:'3',tipo:'receita',valor:100},
-    {key:'4',tipo:'receita',valor:120},
-    {key:'5',tipo:'despesa',valor:500},
-    {key:'6',tipo:'receita',valor:100},
-  ])
+  const { user } = useContext(AuthContext);
+  const uid = user && user.uid;
+
+  const [historico, setHistorico] = useState([]);
+  const [saldo, setSaldo] = useState(0);
+
+  useEffect(() => {
+    async function loadList() {
+
+      await firebase.database().ref('users').child(uid).on('value', (snapshot) => {
+        setSaldo(snapshot.val().saldo);
+      })
+
+      await firebase.database().ref('historico')
+      .child(uid)
+      .orderByChild('date').equalTo(format(new Date, 'dd/MM/yy'))
+      .limitToLast(10)
+      .on('value', (snapshot) => {
+        setHistorico([]);
+
+        snapshot.forEach((childItem) => {
+          let list = {
+            key: childItem.key,
+            tipo: childItem.val().tipo,
+            valor: childItem.val().value
+          };
+
+          setHistorico(oldArray => [...oldArray,list].reverse())
+        })
+      })
+
+    }
+    loadList();
+  }, [])
+
   return (
     <Background>
-      <Header/>
+      <Header />
       <Container>
         <Nome> {user && user.nome} </Nome>
-        <Saldo>R$ 123,00</Saldo>
+        <Saldo>R$ {saldo.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g,'$1.')}</Saldo>
       </Container>
 
       <Title>Ultimas movimentações</Title>
@@ -37,7 +65,7 @@ export default function Home() {
         showsVerticalScrollIndicator={false}
         data={historico}
         keyExtractor={item => item.key}
-        renderItem={({item}) => <HistoricoList data={item} /> }
+        renderItem={({ item }) => <HistoricoList data={item} />}
       />
     </Background>
   );

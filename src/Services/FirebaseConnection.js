@@ -3,15 +3,15 @@ import 'firebase/auth';
 import 'firebase/database';
 
 let firebaseConfig = {
-    apiKey: "AIzaSyBblrz7hqha6AO4odolZBc2TnW2Bt3nByQ",
-    authDomain: "myapp-b2516.firebaseapp.com",
-    databaseURL: "https://myapp-b2516-default-rtdb.firebaseio.com",
-    projectId: "myapp-b2516",
-    storageBucket: "myapp-b2516.appspot.com",
-    messagingSenderId: "807849994455",
-    appId: "1:807849994455:web:e769f4047ecd982f116892",
-    measurementId: "G-Y6G0J84E16"
-};
+    apiKey: "AIzaSyCu3pqfbYK4Eay-T_8mdEnnfcOrANm217c",
+    authDomain: "mysnackbar-5b80a.firebaseapp.com",
+    databaseURL: "https://mysnackbar-5b80a-default-rtdb.firebaseio.com",
+    projectId: "mysnackbar-5b80a",
+    storageBucket: "mysnackbar-5b80a.appspot.com",
+    messagingSenderId: "203204197484",
+    appId: "1:203204197484:web:cb1aa11c97bb00824b6c49",
+    measurementId: "G-CJKGD5G4WC"
+  };
 
 if (!firebase.apps.length) {
     // Initialize Firebase
